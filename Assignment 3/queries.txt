@@ -49,6 +49,24 @@ group by takes.sid
 having count(cid) = 0;
 
 -- Q8
-select department.dname,department.Budget from department where Budget = (select max(Budget) from department) or Budget = (select min(Budget) from department);
+select department.dname, department.Budget
+from department
+where Budget = (select max(Budget) from department)
+   or Budget = (select min(Budget) from department);
 
+-- Q9
+select fid, faculty.fname
+from faculty
+where fid = (select fid from teaches group by fid order by count(fid) desc limit 1)
+Union
+select fid, faculty.fname
+from faculty
+where fid = (select fid from teaches group by fid order by count(fid) asc limit 1);
+-- TODO: Need a better query for this
 
+-- Q10
+select department.Building
+from department
+group by department.Building
+order by count(*) desc
+limit 1;
