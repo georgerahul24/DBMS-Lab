@@ -125,7 +125,67 @@ from student
 -- Q 13 --
 select sname
 from student
-         left outer join sameFacultyAndAdvisor on student.sid = sameFacultyAndAdvisor.sid where sameFacultyAndAdvisor.sid is NULL;
+         left outer join sameFacultyAndAdvisor on student.sid = sameFacultyAndAdvisor.sid
+where sameFacultyAndAdvisor.sid is NULL;
 
 -- Q 14 --
 
+create view numberOfStudentsPerDepartment as
+select did, count(sid) as numberOfStudents
+from takes
+         natural join course
+group by did;
+
+select did
+from numberOfStudentsPerDepartment
+where numberOfStudents = (select max(numberOfStudents)
+                          from numberOfStudentsPerDepartment);
+
+-- Q 15 --
+create view numberOfFacultiesPerDepartment as
+select did, count(fid) as numberOfFaculty
+from teaches
+         natural join course
+group by did;
+
+select did
+from numberOfFacultiesPerDepartment
+where numberOfFaculty = (select max(numberOfFaculty)
+                         from numberOfFacultiesPerDepartment);
+
+-- Q 16 --
+create view cidAndDid as
+select cid, did
+from teaches
+         natural join faculty;
+
+select a.cid
+from cidAndDid as a,
+     cidAndDid as b
+where a.cid = b.cid
+  and a.did = 1
+  and b.did = 2;
+
+-- Q17 --
+select a.sid as sid
+from takes as a,
+     takes as b
+where a.sid = b.sid
+  and a.cid = 1
+  and b.cid = 2;
+
+-- Q18 --
+
+create view avgSalaryPerDepartment as
+select did, avg(salary) as avg_salary
+from faculty
+         natural join department
+group by did;
+
+select did from avgSalaryPerDepartment where avg_salary = (select max(avgSalaryPerDepartment.avg_salary) from avgSalaryPerDepartment);
+
+-- Q 19 --
+select did from avgSalaryPerDepartment where avgSalaryPerDepartment.avg_salary = (select min(avgSalaryPerDepartment.avg_salary) from avgSalaryPerDepartment);
+
+-- Q 20 --
+select did from student natural join department where age = (select min(age) from student);
