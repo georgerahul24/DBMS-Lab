@@ -2,6 +2,7 @@ use Assignment5;
 
 -- Q1 --
 
+
 select department.dname as twoOrMoreCoursePerDept
 from department
          natural join (select did, count(*)
@@ -266,6 +267,7 @@ from temp_table
 
 
 -- Q15 --
+DELIMITER //
 CREATE FUNCTION GRADE(sid INT)
     RETURNS VARCHAR(3)
     DETERMINISTIC
@@ -290,7 +292,8 @@ BEGIN
     END IF;
 
     RETURN grade;
-END;
+END//
+DELIMITER ;
 
 select sid, GRADE(sid) as Grade
 from student
@@ -330,5 +333,6 @@ select sameSalary(100) as numberOfFacultyGreaterThan100;
 
 -- Q20 --
 
-select  * from faculty where sameSalary(faculty.salary) >=2;
-
+select *
+from faculty
+where sameSalary(faculty.salary) >= 2;
